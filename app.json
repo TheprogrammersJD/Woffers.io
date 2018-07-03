@@ -1,0 +1,21 @@
+{
+  "name": "Woffers.io",
+  "description": "A multiplayer .IO game",
+  "website": "https://github.com/TheprogrammersJD/Woffers.io",
+  "repository": "https://github.com/TheprogrammersJD/Woffers.io",
+  "success_url": "/",
+  "keywords": [
+    "node",
+    "express",
+    "socket.io",
+    "realtime",
+    "websocket"
+  ],
+  "scripts": {
+  },
+  "addons": [
+  ],
+  "env": {
+    "BUILDPACK_URL": "https://github.com/heroku/heroku-buildpack-nodejs"
+  }
+}
