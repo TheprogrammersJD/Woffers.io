@@ -8454,56 +8454,46 @@ b.lineVertexBuffer&&c.deleteBuffer(b.lineVertexBuffer)}},d.RendererGL.prototype.
 this.glTarget=c.TEXTURE_2D,this.glFormat=c.RGBA,this.mipmaps=!1,this.glMinFilter=c.LINEAR,this.glMagFilter=c.LINEAR,this.glWrapS=c.CLAMP_TO_EDGE,this.glWrapT=c.CLAMP_TO_EDGE,this.isSrcMediaElement=void 0!==d.MediaElement&&b instanceof d.MediaElement,this._videoPrevUpdateTime=0,this.isSrcHTMLElement=void 0!==d.Element&&b instanceof d.Element&&!(b instanceof d.Graphics),this.isSrcP5Image=b instanceof d.Image,this.isSrcP5Graphics=b instanceof d.Graphics;var e=this._getTextureDataFromSource();return this.width=e.width,this.height=e.height,this.init(e),this},d.Texture.prototype._getTextureDataFromSource=function(){var a;return this.isSrcP5Image?a=this.src.canvas:(this.isSrcMediaElement||this.isSrcP5Graphics||this.isSrcHTMLElement)&&(a=this.src.elt),a},d.Texture.prototype.init=function(a){var b=this._renderer.GL;if(this.glTex=b.createTexture(),this.bindTexture(),b.texParameteri(b.TEXTURE_2D,b.TEXTURE_MAG_FILTER,this.glMagFilter),b.texParameteri(b.TEXTURE_2D,b.TEXTURE_MIN_FILTER,this.glMinFilter),b.texParameteri(b.TEXTURE_2D,b.TEXTURE_WRAP_S,this.glWrapS),b.texParameteri(b.TEXTURE_2D,b.TEXTURE_WRAP_T,this.glWrapT),0===this.width||0===this.height||this.isSrcMediaElement&&!this.src.loadedmetadata){var c=new Uint8Array([1,1,1,1]);b.texImage2D(this.glTarget,0,b.RGBA,1,1,0,this.glFormat,b.UNSIGNED_BYTE,c)}else b.texImage2D(this.glTarget,0,this.glFormat,this.glFormat,b.UNSIGNED_BYTE,a)},d.Texture.prototype.update=function(){var a=this.src;if(0!==a.width&&0!==a.height){var b=this._getTextureDataFromSource(),c=this._renderer.GL;if(b.width!==this.width||b.height!==this.height)this.width=b.width,this.height=b.height,this.bindTexture(),c.texImage2D(this.glTarget,0,this.glFormat,this.glFormat,c.UNSIGNED_BYTE,b),this.isSrcP5Image?a.setModified(!1):(this.isSrcMediaElement||this.isSrcHTMLElement)&&a.setModified(!0);else if(this.isSrcP5Image)a.isModified()&&(this.bindTexture(),c.texImage2D(this.glTarget,0,this.glFormat,this.glFormat,c.UNSIGNED_BYTE,b),a.setModified(!1));else if(this.isSrcMediaElement){var d=!1;a.isModified()?(d=!0,a.setModified(!1)):a.loadedmetadata&&this._videoPrevUpdateTime!==a.time()&&(this._videoPrevUpdateTime=a.time(),d=!0),d&&(this.bindTexture(),c.texImage2D(this.glTarget,0,this.glFormat,this.glFormat,c.UNSIGNED_BYTE,b))}else c.texImage2D(this.glTarget,0,this.glFormat,this.glFormat,c.UNSIGNED_BYTE,b)}},d.Texture.prototype.bindTexture=function(){return this._renderer.GL.bindTexture(this.glTarget,this.glTex),this},d.Texture.prototype.unbindTexture=function(){this._renderer.GL.bindTexture(this.glTarget,null)},b.exports=d.Texture},{"../core/core":21}],75:[function(a,b,c){"use strict";var d=a("../core/core");a("./p5.Geometry"),d.prototype.plane=function(a,b,c,e){void 0===a&&(a=50),void 0===b&&(b=a),void 0===c&&(c=1),void 0===e&&(e=1);var f="plane|"+c+"|"+e;if(!this._renderer.geometryInHash(f)){var g=function(){for(var a,b,c,e=0;e<=this.detailY;e++){b=e/this.detailY;for(var f=0;f<=this.detailX;f++)a=f/this.detailX,c=new d.Vector(a-.5,b-.5,0),this.vertices.push(c),this.uvs.push([a,b])}},h=new d.Geometry(c,e,g);h.computeFaces().computeNormals(),c<=1&&e<=1?(h._makeTriangleEdges(),this._renderer._edgesToVertices(h)):console.log("Cannot draw stroke on plane objects with more than 1 detailX or 1 detailY"),this._renderer.createBuffers(f,h)}this._renderer.drawBuffersScaled(f,a,b,0)},d.prototype.box=function(a,b,c,e,f){void 0===a&&(a=50),void 0===b&&(b=a),void 0===c&&(c=b),void 0===e&&(e=4),void 0===f&&(f=4);var g="box|"+e+"|"+f;if(!this._renderer.geometryInHash(g)){var h=function(){var a=[[0,4,2,6],[1,3,5,7],[0,1,4,5],[2,6,3,7],[0,2,1,3],[4,5,6,7]];this.strokeIndices=[[0,1],[1,3],[3,2],[6,7],[8,9],[9,11],[14,15],[16,17],[17,19],[18,19],[20,21],[22,23]];for(var b=0;b<a.length;b++){for(var c=a[b],e=4*b,f=0;f<4;f++){var g=c[f],h=new d.Vector((2*(1&g)-1)/2,((2&g)-1)/2,((4&g)/2-1)/2);this.vertices.push(h),this.uvs.push([1&f,(2&f)/2])}this.faces.push([e,e+1,e+2]),this.faces.push([e+2,e+1,e+3])}},i=new d.Geometry(e,f,h);i.computeNormals(),e<=4&&f<=4?(i._makeTriangleEdges(),this._renderer._edgesToVertices(i)):console.log("Cannot draw stroke on box objects with more than 4 detailX or 4 detailY"),this._renderer.createBuffers(g,i)}return this._renderer.drawBuffersScaled(g,a,b,c),this},d.prototype.sphere=function(a,b,c){return void 0===a&&(a=50),void 0===b&&(b=24),void 0===c&&(c=16),this.ellipsoid(a,a,a,b,c),this};var e=function(a,b,c,e,f,g,h){e=e<3?3:e,f=f<1?1:f,g=void 0===g||g,h=void 0===h||h;var i,j,k=(g?2:0)+(h?2:0),l=e+1,m=Math.atan2(a-b,c),n=g?-2:0,o=f+(h?2:0);for(i=n;i<=o;++i){var p,q=i/f,r=c*q;for(i<0?(r=0,q=1,p=a):i>f?(r=c,q=1,p=b):p=a+i/f*(b-a),-2!==i&&i!==f+2||(p=0,q=0),r-=c/2,j=0;j<l;++j)this.vertices.push(new d.Vector(Math.sin(j*Math.PI*2/e)*p,r,Math.cos(j*Math.PI*2/e)*p)),this.vertexNormals.push(new d.Vector(i<0||i>f?0:Math.sin(j*Math.PI*2/e)*Math.cos(m),i<0?-1:i>f?1:Math.sin(m),i<0||i>f?0:Math.cos(j*Math.PI*2/e)*Math.cos(m))),this.uvs.push([j/e,q])}for(i=0;i<f+k;++i)for(j=0;j<e;++j)this.faces.push([l*(i+0)+0+j,l*(i+0)+1+j,l*(i+1)+1+j]),this.faces.push([l*(i+0)+0+j,l*(i+1)+1+j,l*(i+1)+0+j])};d.prototype.cylinder=function(a,b,c,f){void 0===a&&(a=50),void 0===b&&(b=a),void 0===c&&(c=24),void 0===f&&(f=16);var g="cylinder|"+c+"|"+f;if(!this._renderer.geometryInHash(g)){var h=new d.Geometry(c,f);e.call(h,1,1,1,c,f,!0,!0),h.computeNormals(),c<=24&&f<=16?(h._makeTriangleEdges(),this._renderer._edgesToVertices(h)):console.log("Cannot draw stroke on cylinder objects with more than 24 detailX or 16 detailY"),this._renderer.createBuffers(g,h)}return this._renderer.drawBuffersScaled(g,a,a,b),this},d.prototype.cone=function(a,b,c,f){void 0===a&&(a=50),void 0===b&&(b=a),void 0===c&&(c=24),void 0===f&&(f=16);var g="cone|"+a+"|"+b+"|"+c+"|"+f;if(!this._renderer.geometryInHash(g)){var h=new d.Geometry(c,f);e.call(h,a,0,b,c,f,!0,!0),h.computeNormals(),c<=24&&f<=16?(h._makeTriangleEdges(),this._renderer._edgesToVertices(h)):console.log("Cannot draw stroke on cone objects with more than 24 detailX or 16 detailY"),this._renderer.createBuffers(g,h)}return this._renderer.drawBuffers(g),this},d.prototype.ellipsoid=function(a,b,c,e,f){void 0===a&&(a=50),void 0===b&&(b=a),void 0===c&&(c=a),void 0===e&&(e=24),void 0===f&&(f=16);var g="ellipsoid|"+e+"|"+f;if(!this._renderer.geometryInHash(g)){var h=function(){for(var a=0;a<=this.detailY;a++)for(var b=a/this.detailY,c=Math.PI*b-Math.PI/2,e=Math.cos(c),f=Math.sin(c),g=0;g<=this.detailX;g++){var h=g/this.detailX,i=2*Math.PI*h,j=Math.cos(i),k=Math.sin(i),l=new d.Vector(e*k,f,e*j);this.vertices.push(l),this.vertexNormals.push(l),this.uvs.push([h,b])}},i=new d.Geometry(e,f,h);i.computeFaces(),e<=24&&f<=24?(i._makeTriangleEdges(),this._renderer._edgesToVertices(i)):console.log("Cannot draw stroke on ellipsoids with more than 24 detailX or 24 detailY"),this._renderer.createBuffers(g,i)}return this._renderer.drawBuffersScaled(g,a,b,c),this},d.prototype.torus=function(a,b,c,e){if(void 0===a)a=50;else if(!a)return;if(void 0===b)b=10;else if(!b)return;void 0===c&&(c=24),void 0===e&&(e=16);var f=(b/a).toPrecision(4),g="torus|"+f+"|"+c+"|"+e;if(!this._renderer.geometryInHash(g)){var h=function(){for(var a=0;a<=this.detailY;a++)for(var b=a/this.detailY,c=2*Math.PI*b,e=Math.cos(c),g=Math.sin(c),h=1+f*e,i=0;i<=this.detailX;i++){var j=i/this.detailX,k=2*Math.PI*j,l=Math.cos(k),m=Math.sin(k),n=new d.Vector(h*l,h*m,f*g),o=new d.Vector(e*l,e*m,g);this.vertices.push(n),this.vertexNormals.push(o),this.uvs.push([j,b])}},i=new d.Geometry(c,e,h);i.computeFaces(),c<=24&&e<=16?(i._makeTriangleEdges(),this._renderer._edgesToVertices(i)):console.log("Cannot draw strokes on torus object with more than 24 detailX or 16 detailY"),this._renderer.createBuffers(g,i)}return this._renderer.drawBuffersScaled(g,a,a,a),this},d.RendererGL.prototype.point=function(a,b,c){return console.log("point not yet implemented in webgl"),this},d.RendererGL.prototype.triangle=function(a){var b=a[0],c=a[1],e=a[2],f=a[3],g=a[4],h=a[5],i="tri";if(!this.geometryInHash(i)){var j=function(){var a=[];a.push(new d.Vector(0,0,0)),a.push(new d.Vector(0,1,0)),a.push(new d.Vector(1,0,0)),this.strokeIndices=[[0,1],[1,2],[2,0]],this.vertices=a,this.faces=[[0,1,2]],this.uvs=[[0,0],[0,1],[1,1]]},k=new d.Geometry(1,1,j);k._makeTriangleEdges(),this._edgesToVertices(k),k.computeNormals(),this.createBuffers(i,k)}var l=this.uMVMatrix.copy();try{var m=new d.Matrix([e-b,f-c,0,0,g-b,h-c,0,0,0,0,1,0,b,c,0,1]).mult(this.uMVMatrix);this.uMVMatrix=m,this.drawBuffers(i)}finally{this.uMVMatrix=l}return this},d.RendererGL.prototype.ellipse=function(a){var b=a[0],c=a[1],e=a[2],f=a[3],g=a[4]||24,h="ellipse|"+g;if(!this.geometryInHash(h)){var i=function(){this.vertices.push(new d.Vector(.5,.5,0)),this.uvs.push([.5,.5]);for(var a=0;a<=this.detailX;a++){var b=a/this.detailX,c=2*Math.PI*b,e=.5+Math.cos(c)/2,f=.5+Math.sin(c)/2;this.vertices.push(new d.Vector(e,f,0)),this.uvs.push([e,f]),this.faces.push([0,(a+1)%this.detailX+1,a+1])}},j=new d.Geometry(g,1,i);j.computeNormals(),g<=50?(j._makeTriangleEdges(),this._edgesToVertices(j)):console.log("Cannot stroke ellipse with more than 50 detailX"),this.createBuffers(h,j)}var k=this.uMVMatrix.copy();try{this.uMVMatrix.translate([b,c,0]),this.uMVMatrix.scale(e,f,1),this.drawBuffers(h)}finally{this.uMVMatrix=k}return this},d.RendererGL.prototype.rect=function(a){var b=a[0],c=a[1],e=a[2],f=a[3],g=a[4]||24,h=a[5]||16,i="rect|"+g+"|"+h;if(!this.geometryInHash(i)){var j=function(){for(var a=0;a<=this.detailY;a++)for(var b=a/this.detailY,c=0;c<=this.detailX;c++){var e=c/this.detailX,f=new d.Vector(e,b,0);this.vertices.push(f),this.uvs.push([e,b])}},k=new d.Geometry(g,h,j);k.computeFaces().computeNormals()._makeTriangleEdges(),this._edgesToVertices(k),this.createBuffers(i,k)}var l=this.uMVMatrix.copy();try{this.uMVMatrix.translate([b,c,0]),this.uMVMatrix.scale(e,f,1),this.drawBuffers(i)}finally{this.uMVMatrix=l}return this},d.RendererGL.prototype.quad=function(a,b,c,e,f,g,h,i){var j="quad|"+a+"|"+b+"|"+c+"|"+e+"|"+f+"|"+g+"|"+h+"|"+i;if(!this.geometryInHash(j)){var k=function(){this.vertices.push(new d.Vector(a,b,0)),this.vertices.push(new d.Vector(c,e,0)),this.vertices.push(new d.Vector(f,g,0)),this.vertices.push(new d.Vector(h,i,0)),this.uvs.push([0,0],[1,0],[1,1],[0,1]),this.strokeIndices=[[0,1],[1,2],[2,3],[3,0]]},l=new d.Geometry(2,2,k);l.computeNormals()._makeTriangleEdges(),this._edgesToVertices(l),l.faces=[[0,1,2],[2,3,0]],this.createBuffers(j,l)}return this.drawBuffers(j),this},d.RendererGL.prototype.bezier=function(a,b,c,d,e,f,g,h,i,j,k,l){var m=this._pInst._bezierDetail||20;this.beginShape();for(var n=0;n<=m;n++){var o=Math.pow(1-n/m,3),p=n/m*3*Math.pow(1-n/m,2),q=3*Math.pow(n/m,2)*(1-n/m),r=Math.pow(n/m,3);this.vertex(a*o+d*p+g*q+j*r,b*o+e*p+h*q+k*r,c*o+f*p+i*q+l*r)}return this.endShape(),this},d.RendererGL.prototype.curve=function(a,b,c,d,e,f,g,h,i,j,k,l){var m=this._pInst._curveDetail;this.beginShape();for(var n=0;n<=m;n++){var o=.5*Math.pow(n/m,3),p=.5*Math.pow(n/m,2),q=n/m*.5,r=.5,s=o*(3*d-a-3*g+j)+p*(2*a-5*d+4*g-j)+q*(-a+g)+r*(2*d),t=o*(3*e-b-3*h+k)+p*(2*b-5*e+4*h-k)+q*(-b+h)+r*(2*e),u=o*(3*f-c-3*i+l)+p*(2*c-5*f+4*i-l)+q*(-c+i)+r*(2*f);this.vertex(s,t,u)}return this.endShape(),this},d.RendererGL.prototype.line=function(){return 6===arguments.length?(this.beginShape(),this.vertex(arguments[0],arguments[1],arguments[2]),this.vertex(arguments[3],arguments[4],arguments[5]),this.endShape()):4===arguments.length&&(this.beginShape(),this.vertex(arguments[0],arguments[1],0),this.vertex(arguments[2],arguments[3],0),this.endShape()),this},b.exports=d},{"../core/core":21,"./p5.Geometry":68}]},{},[12])(12)});
 </script>
 <script>
-var mySocketID = Math.round(((Math.random() + 1) * 10000))*Math.round(Math.random() * 10);
-var adjectives = ["red", "orange", "yellow", "green", "blue", "purple", "black", "pink", "brown", "raging", "ferocious", "awesome", "stinky", "camouflaged", "jumpy", "plastic", "sticky", "trapped", "metal", "furry", "sleeping", "snoring", "running", "walking", "crazy", "fighting", "flying", "gliding", "happy", "sad", "eating", "working", "typing", "climbing", "WORKING", "colorful", "typical", "common", "rare", "dirty", "clean", "proper", "rich", "poor", "loving", "wooden", "paper", "fake", "sneaky", "sly", "broken", "convicted", "young", "old", "aged", "firey", "burnt", "ancient", "unearthed", "discovered", "fluttering", "shivering", "lazy", "honest", "deceitful", "robotic", "burning", "smoking", "legendary", "contented", "talkative", "ridiculous", "colonial", "fabric", "fabricated", "squishy", "squished", "blank", "electronic", "pennyless", "broke", "burping", "lethargic", "shaking", "sick", "flowery", "frozen", "spinning", "fat", "rotating", "obese", "overweight", "worthless"];
-var nouns = ["bear", "lion", "man", "car", "panda", "tiger", "cat", "dog", "hamster", "PROGRAMMER", "gamer", "employee", "employer", "thief", "theif", "firefighter", "wind", "boat", "sea", "gunner", "space", "air", "mouse", "kitten", "scab", "pizza", "ice-cream", "chocolate", "grapes", "horse", "government", "president", "leader", "convict", "ball", "treasure", "pearl", "gem", "chest", "box", "apple", "block", "snake", "bird", "ship", "tulip", "coupon", "pauper", "prince", "princess", "king", "queen", "peasant", "musician", "knight", "castle", "chimney", "chimneysweep", "slave", "servant", "advertisement", "mushroom", "manager", "dancer", "giraffe", "mermaid", "unicorn", "dragon", "book"];
-var nickname = adjectives[(Math.ceil(Math.random()*adjectives.length))-1]+"-"+nouns[(Math.ceil(Math.random()*nouns.length))-1]+"-"+(Math.ceil(Math.random()*1000));
-///var myposx = 0;
-///var myposy = 0;
+//var adjectives = ["red", "orange", "yellow", "green", "blue", "purple", "black", "pink", "brown", "raging", "ferocious", "awesome", "stinky", "camouflaged", "jumpy", "plastic", "sticky", "trapped", "metal", "furry", "sleeping", "snoring", "running", "walking", "crazy", "fighting", "flying", "gliding", "happy", "sad", "eating", "working", "typing", "climbing", "WORKING", "colorful", "typical", "common", "rare", "dirty", "clean", "proper", "rich", "poor", "loving", "wooden", "paper", "fake", "sneaky", "sly", "broken", "convicted", "young", "old", "aged", "firey", "burnt", "ancient", "unearthed", "discovered", "fluttering", "shivering", "lazy", "honest", "deceitful", "robotic", "burning", "smoking", "legendary", "contented", "talkative", "ridiculous", "colonial", "fabric", "fabricated", "squishy", "squished", "blank", "electronic", "pennyless", "broke", "burping", "lethargic", "shaking", "sick", "flowery", "frozen", "spinning", "fat", "rotating", "obese", "overweight", "worthless"];
+//var nouns = ["bear", "lion", "man", "car", "panda", "tiger", "cat", "dog", "hamster", "PROGRAMMER", "gamer", "employee", "employer", "thief", "theif", "firefighter", "wind", "boat", "sea", "gunner", "space", "air", "mouse", "kitten", "scab", "pizza", "ice-cream", "chocolate", "grapes", "horse", "government", "president", "leader", "convict", "ball", "treasure", "pearl", "gem", "chest", "box", "apple", "block", "snake", "bird", "ship", "tulip", "coupon", "pauper", "prince", "princess", "king", "queen", "peasant", "musician", "knight", "castle", "chimney", "chimneysweep", "slave", "servant", "advertisement", "mushroom", "manager", "dancer", "giraffe", "mermaid", "unicorn", "dragon", "book"];
+var nickname = "namethatisntworking";
+var mysid;
+var ready = false;
+var players = [];
 var playersx = [];
 var playersy = [];
-///var playerr = [];
-///var playerg = [];
-///var playerb = [];
 var playersalive = [];
-///var play = false;
 var socketids = [];
 var nicknames = [];
-///var playersmass = [];
-///var mapsize = 5;
-///var youDed = false;
-///var youDead = false;
-///var youreater;
-///var view = 1;
-///var size;
-///var buggeesx = [];
-///var buggeesy = [];
-///var buggeesr = [];
-///var buggeesg = [];
-///var buggeesb = [];
-///var buggeesalive = [];
-	
-	
-	
-/*function nickname(){
-	nickname = $("#name").val();
-	play = true;
-	$("label").remove();
-	$("input").remove();
-	$("button").remove();
-	
-}*/
+var playersonline = 0;
+
+var one = 1;
+
+
 var width = window.innerWidth*0.95;
 var height = window.innerHeight*0.95;
-var widthorheight;
+/*var widthorheight;
 if(width<height){
 	widthorheight = width;
 }
 else{
 	widthorheight = height;
+}*/
+
+
+var ss; //Smallest size
+if(width<height){
+	ss = width;
 }
+else{
+	ss = height;
+}
+
+var centerx = width/2;
+var centery = height/2;
+
 function setup(){
-	createCanvas(widthorheight, widthorheight);
+	createCanvas(window.innerWidth*0.95, window.innerHeight*0.95);
 	background(100);
 	noStroke();
 	rectMode(RADIUS);
@@ -8512,7 +8502,24 @@ function setup(){
 	
 	
 function draw(){
+	background(100, 100, 100);
+	textAlign(CENTER, CENTER);
+	textSize(ss/10);
 	
+	if(ready == false){
+		fill(234, 69, 57);
+		rect(centerx, centery, ss/5, ss/10);
+		fill(255, 255, 255);
+		text("Play!", centerx, centery);
+		
+		fill(234, 69, 57);
+		rect(centerx, centery/3, ss/2, ss/10);
+		fill(255, 255, 255);
+		text("Players Online: " + playersonline, centerx, centery/3);
+	}
+	else{
+		text(nickname, centerx, centery);
+	}
 }
 function mousePressed(){
 	
@@ -8528,24 +8535,67 @@ function random(min, max){
 	//return Math.floor(Math.random()*(max-min))+min;
 }
 function mouseClicked(){
+	if(ready == false){
+		if(mouseX > (centerx - (ss/5))&&mouseX < (centerx + (ss/5))){
+			if(mouseY > (centery - (ss/10))&&mouseY < (centery + (ss/10))){
+				ready = true;
+				imready();
+			}
+		}
+	}
 	fill(0, 0, 255);
-	ellipse(mouseX, mouseY, widthorheight/10, widthorheight/10);
+	ellipse(mouseX, mouseY, ss/10, ss/10);
+	click(mouseX, mouseY);
 }
 var socket = io();
-//socket.emit('sid', mySocketID, nickname);
-/*function click(coordx, coordy){
+
+function click(coordx, coordy){
 	socket.emit('click', coordx, coordy);
 	return false;
-}*/
+}
+function imready(){
+	if(one == 1){
+		socket.emit('ready', mysid);
+		one = 2;
+	}
+}
 /*function move(dx, dy){
-	socket.emit('mrqst', mySocketID, dx - (widthorheight/2), dy - (widthorheight/2));
+	socket.emit('mrqst', mySocketID, dx - (ss/2), dy - (ss/2));
 	return false;
 }*/	
 	
-/*socket.on('click', function(x, y){
+socket.on('click', function(x, y){
 	fill(255, 0, 0);
-	ellipse(x, y, widthorheight/10, widthorheight/10);
-});*/
+	ellipse(x, y, ss/10, ss/10);
+	console.log("click");
+});
+socket.on('youare', function(playerobject){
+	console.log(playerobject);
+	nickname = playerobject.name;
+	mysid = playerobject.id;
+});
+
+socket.on('playersonline', function(po){
+	playersonline = po;
+});
+
+socket.on('player', function(playerobject){
+	players.push(playerobject);
+	console.log("Player " + playerobject.name + " came online.");
+	playersonline++;
+});
+
+socket.on('playerdisconnect', function(playerobject){
+	players.push(playerobject);
+	console.log("Player " + playerobject.name + " disconnected.");
+	playersonline--;
+});
+
+socket.on('playersinroom', function(playerobject){
+	players.push(playerobject);
+	console.log("Player " + playerobject.name + " joined this room.");
+	playersonline++;
+});
 </script>
 </body>
 </html>
