@@ -107,6 +107,7 @@ function player(id){
 	this.alive = true;
 	this.online = true;
 	this.room = null;
+	this.attacking = false;
 	players.push(this);
 	socketids.push(this.id);
 }
