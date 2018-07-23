@@ -8468,6 +8468,7 @@ var nicknames = [];
 var playersonline = 0;
 
 var one = 1;
+var two = 2;
 
 
 var width = window.innerWidth*0.95;
@@ -8498,27 +8499,53 @@ function setup(){
 	noStroke();
 	rectMode(RADIUS);
 }
-	
-	
+
+var mobile;
 	
 function draw(){
+	if(two == 2){
+		console.log(deviceOrientation);
+		two++;
+	}
 	background(100, 100, 100);
 	textAlign(CENTER, CENTER);
 	textSize(ss/10);
 	
 	if(ready == false){
-		fill(234, 69, 57);
+		fill(0, 0, 0);
 		rect(centerx, centery, ss/5, ss/10);
 		fill(255, 255, 255);
 		text("Play!", centerx, centery);
 		
-		fill(234, 69, 57);
+		if(playersonline < 1){
+			fill(234, 69, 57);
+		}
+		if(playersonline >= 1){
+			fill(0, 255, 0);
+		}
 		rect(centerx, centery/3, ss/2, ss/10);
 		fill(255, 255, 255);
 		text("Players Online: " + playersonline, centerx, centery/3);
 	}
 	else{
+	
+	
+	
 		text(nickname, centerx, centery);
+		if(deviceOrientation == 'landscape'){
+			text(deviceOrientation, mouseX, mouseY);
+			mobile = true;
+		}
+		else if(deviceOrientation == 'portrait'){
+			background(100);
+			fill(255, 0, 0);
+			text("PLEASE TURN YOUR DEVICE TO LANDSCAPE", centerx, centery);
+			mobile = true;
+		}
+		else{
+			console.log("COMPUTER");
+			mobile = false;
+		}
 	}
 }
 function mousePressed(){
