@@ -8456,19 +8456,35 @@ this.glTarget=c.TEXTURE_2D,this.glFormat=c.RGBA,this.mipmaps=!1,this.glMinFilter
 <script>
 //var adjectives = ["red", "orange", "yellow", "green", "blue", "purple", "black", "pink", "brown", "raging", "ferocious", "awesome", "stinky", "camouflaged", "jumpy", "plastic", "sticky", "trapped", "metal", "furry", "sleeping", "snoring", "running", "walking", "crazy", "fighting", "flying", "gliding", "happy", "sad", "eating", "working", "typing", "climbing", "WORKING", "colorful", "typical", "common", "rare", "dirty", "clean", "proper", "rich", "poor", "loving", "wooden", "paper", "fake", "sneaky", "sly", "broken", "convicted", "young", "old", "aged", "firey", "burnt", "ancient", "unearthed", "discovered", "fluttering", "shivering", "lazy", "honest", "deceitful", "robotic", "burning", "smoking", "legendary", "contented", "talkative", "ridiculous", "colonial", "fabric", "fabricated", "squishy", "squished", "blank", "electronic", "pennyless", "broke", "burping", "lethargic", "shaking", "sick", "flowery", "frozen", "spinning", "fat", "rotating", "obese", "overweight", "worthless"];
 //var nouns = ["bear", "lion", "man", "car", "panda", "tiger", "cat", "dog", "hamster", "PROGRAMMER", "gamer", "employee", "employer", "thief", "theif", "firefighter", "wind", "boat", "sea", "gunner", "space", "air", "mouse", "kitten", "scab", "pizza", "ice-cream", "chocolate", "grapes", "horse", "government", "president", "leader", "convict", "ball", "treasure", "pearl", "gem", "chest", "box", "apple", "block", "snake", "bird", "ship", "tulip", "coupon", "pauper", "prince", "princess", "king", "queen", "peasant", "musician", "knight", "castle", "chimney", "chimneysweep", "slave", "servant", "advertisement", "mushroom", "manager", "dancer", "giraffe", "mermaid", "unicorn", "dragon", "book"];
+
+var me;
 var nickname = "namethatisntworking";
 var mysid;
 var ready = false;
 var players = [];
-var playersx = [];
-var playersy = [];
+var roomplayers = [];
+//var playersx = [];
+//var playersy = [];
 var playersalive = [];
 var socketids = [];
 var nicknames = [];
 var playersonline = 0;
 
+var hypo;
+var angle;
+var quadrant;
+
+var touchstartx;
+var touchstarty;
+var touchwhich;
+
+var roomwidth = 1000;
+var roomheight = 1000;
+
+
 var one = 1;
 var two = 2;
+var three = 3;
 
 
 var width = window.innerWidth*0.95;
@@ -8503,16 +8519,17 @@ function setup(){
 var mobile;
 	
 function draw(){
+	
 	if(two == 2){
 		console.log(deviceOrientation);
 		two++;
 	}
-	background(100, 100, 100);
+	background(0, 0, 0);
 	textAlign(CENTER, CENTER);
 	textSize(ss/10);
 	
 	if(ready == false){
-		fill(0, 0, 0);
+		fill(100, 100, 100);
 		rect(centerx, centery, ss/5, ss/10);
 		fill(255, 255, 255);
 		text("Play!", centerx, centery);
@@ -8528,25 +8545,135 @@ function draw(){
 		text("Players Online: " + playersonline, centerx, centery/3);
 	}
 	else{
-	
-	
-	
-		text(nickname, centerx, centery);
+		translate((-me.x)*(ss/100) + width/2, (-me.y)*(ss/100) + height/2);
+		//console.log(me.x + ', ' + me.y);
+		for(var w = 0; w < (roomwidth+1)*(ss/100); w+=(ss/10)){
+			for(var h = 0; h < (roomheight+1)*(ss/100); h+=(ss/10)){
+				if(w < ((me.x*(ss/100))+(width/3*1))&&w > ((me.x*(ss/100))-(width/3*1))&&h < ((me.y*(ss/100))+(height/3*1))&&h > ((me.y*(ss/100))-(height/3*1))){
+					fill(255, 255, 255);
+					strokeWeight(1);
+					stroke(255, 255, 255);
+					line(w + (ss/20), h, w + (ss/30), h + (ss/20));
+					line(w + (ss/30), h + (ss/20), w - (ss/30), h + (ss/20));
+					line(w - (ss/30), h + (ss/20), w - (ss/20), h);
+					line(w - (ss/20), h, w - (ss/30), h - (ss/20));
+					line(w - (ss/30), h - (ss/20), w + (ss/30), h - (ss/20));
+					line(w + (ss/30), h - (ss/20), w + (ss/20), h);
+					strokeWeight(0);
+					//ellipse(w, h, 10, 10);
+				}
+			}
+		}
+		translate(((me.x)*(ss/100)) - width/2, ((me.y)*(ss/100)) - height/2);
+		
+		
+		
+		translate(-(me.x)*(ss/100) + width/2, -(me.y)*(ss/100) + height/2);
+		for(var rp = 0; rp < roomplayers.length; rp++){
+			if(roomplayers[rp].alive == true){
+				fill(255, 255, 255);
+				ellipse(roomplayers[rp].x*(ss/100), roomplayers[rp].y*(ss/100), ss/10, ss/10);
+				text(roomplayers[rp].name, roomplayers[rp].x*(ss/100), roomplayers[rp].y*(ss/100) - ss/10);
+			}
+		}
+		translate((me.x)*(ss/100) - width/2, (me.y)*(ss/100) - height/2);
+		
+		
+		
+		translate(mouseX, mouseY);
+		ellipse(0, 0, 10, 10);
+		translate(-mouseX, -mouseY);
+		
+		fill(255, 255, 255);
+		ellipse(centerx, centery, ss/10, ss/10);
+		text(nickname, centerx, centery - ss/10);
 		if(deviceOrientation == 'landscape'){
-			text(deviceOrientation, mouseX, mouseY);
+			//text(deviceOrientation, mouseX, mouseY);
 			mobile = true;
 		}
 		else if(deviceOrientation == 'portrait'){
 			background(100);
 			fill(255, 0, 0);
+			textSize(ss/30);
 			text("PLEASE TURN YOUR DEVICE TO LANDSCAPE", centerx, centery);
 			mobile = true;
 		}
 		else{
-			console.log("COMPUTER");
-			mobile = false;
+			if(three == 3){
+				console.log("COMPUTER");
+				mobile = false;
+				three ++;
+			}
+			/*textSize(ss/10);
+			text(10, mouseX, mouseY + 50);
+			textSize(ss/11);
+			text(11, mouseX, mouseY + 100);
+			textSize(ss/12);
+			text(12, mouseX, mouseY + 150);
+			textSize(ss/13);
+			text(13, mouseX, mouseY + 200);
+			textSize(ss/14);
+			text(14, mouseX, mouseY + 250);
+			textSize(ss/15);
+			text(15, mouseX, mouseY + 300);*/
+		}
+		if(mobile == false){
+			//console.log((mouseX - centerx) + ', ' + (mouseY - centery));
+			//hypo = Math.sqrt(Math.pow(mouseX - centerx, 2) + Math.pow(mouseY - centery, 2));
+			angle = Math.atan((mouseX - centerx)/(mouseY - centery));
+			if(mouseX - centerx > 0&&mouseY - centery < 0){
+				quadrant = 1;
+			}
+			if(mouseX - centerx < 0&&mouseY - centery < 0){
+				quadrant = 2;
+			}
+			if(mouseX - centerx < 0&&mouseY - centery > 0){
+				quadrant = 3;
+			}
+			if(mouseX - centerx > 0&&mouseY - centery > 0){
+				quadrant = 4;
+			}
+			socket.emit('mrqst', angle, quadrant);
+		}
+		if(mobile == true){
+			for(var t = 0; t < touches.length; t++){
+				if(touchwhich == t){
+					angle = Math.atan((touches[t].x - touchstartx)/(touches[t].y - touchstarty));
+					
+					if(touches[t].x - touchstartx > 0&&touches[t].y - touchstarty < 0){
+						quadrant = 1;
+					}
+					if(touches[t].x - touchstartx < 0&&touches[t].y - touchstarty < 0){
+						quadrant = 2;
+					}
+					if(touches[t].x - touchstartx < 0&&touches[t].y - touchstarty > 0){
+						quadrant = 3;
+					}
+					if(touches[t].x - touchstartx > 0&&touches[t].y - touchstarty > 0){
+						quadrant = 4;
+					}
+					
+					socket.emit('mrqst', angle, quadrant);
+				}
+			}
 		}
 	}
+}
+function touchStarted(pq){
+	if(mouseX > centerx){
+		touchstartx = mouseX;
+		touchstarty = mouseY;
+		touchwhich = pq.which;
+		//console.log(touchstartx + ", " + touchstarty);
+	}
+	return false;
+}
+function touchEnded(pq){
+	if(touchwhich == pq.which){
+		touchwhich;
+		console.log(touchwhich);
+	}
+	return false;
 }
 function mousePressed(){
 	
@@ -8567,12 +8694,15 @@ function mouseClicked(){
 			if(mouseY > (centery - (ss/10))&&mouseY < (centery + (ss/10))){
 				ready = true;
 				imready();
+				//fullscreen(true);
 			}
 		}
 	}
-	fill(0, 0, 255);
-	ellipse(mouseX, mouseY, ss/10, ss/10);
-	click(mouseX, mouseY);
+	if(ready == false){
+		fill(0, 0, 255);
+		ellipse(mouseX, mouseY, ss/10, ss/10);
+		click(mouseX, mouseY);
+	}
 }
 var socket = io();
 
@@ -8598,8 +8728,33 @@ socket.on('click', function(x, y){
 });
 socket.on('youare', function(playerobject){
 	console.log(playerobject);
+	me = playerobject;
 	nickname = playerobject.name;
 	mysid = playerobject.id;
+});
+
+socket.on('roomsize', function(roomsizew, roomsizeh){
+	roomwidth = roomsizew;
+	roomheight = roomsizeh;
+});
+
+socket.on('yourroom', function(roomnumber){
+	console.log("You are in room #" + roomnumber);
+	me.room = roomnumber;
+});
+
+socket.on('move', function(id, mvx, mvy){
+	//console.log(id + ' ' + mvx + ' ' + mvy);
+	for(var pir = 0; pir < roomplayers.length; pir++){
+		if(roomplayers[pir].id == id){
+			roomplayers[pir].x = mvx;
+			roomplayers[pir].y = mvy;
+		}
+	}
+	if(me.id == id){
+		me.x = mvx;
+		me.y = mvy;
+	}
 });
 
 socket.on('playersonline', function(po){
@@ -8613,15 +8768,18 @@ socket.on('player', function(playerobject){
 });
 
 socket.on('playerdisconnect', function(playerobject){
-	players.push(playerobject);
 	console.log("Player " + playerobject.name + " disconnected.");
 	playersonline--;
+	for(var pd = 0; pd < roomplayers.length; pd++){
+		if(roomplayers[pd].room == playerobject.room){
+			roomplayers.online = false;
+		}
+	}
 });
 
 socket.on('playersinroom', function(playerobject){
-	players.push(playerobject);
+	roomplayers.push(playerobject);
 	console.log("Player " + playerobject.name + " joined this room.");
-	playersonline++;
 });
 </script>
 </body>
