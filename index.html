@@ -8660,6 +8660,20 @@ function draw(){
 	}
 }
 function touchStarted(pq){
+	if(ready == false){
+		if(mouseX > (centerx - (ss/5))&&mouseX < (centerx + (ss/5))){
+			if(mouseY > (centery - (ss/10))&&mouseY < (centery + (ss/10))){
+				ready = true;
+				imready();
+				//fullscreen(true);
+			}
+		}
+	}
+	if(ready == false){
+		fill(0, 0, 255);
+		ellipse(mouseX, mouseY, ss/10, ss/10);
+		click(mouseX, mouseY);
+	}
 	if(mouseX > centerx){
 		touchstartx = mouseX;
 		touchstarty = mouseY;
